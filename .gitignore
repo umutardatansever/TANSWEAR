@@ -1,0 +1,22 @@
+# Compiled class files
+bin/
+*.class
+
+# IDE files
+.settings/
+.classpath
+.project
+.idea/
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary files
+gecici*.txt
+
+# Gemini/Claude
+.claude/
+.gemini/

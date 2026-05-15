@@ -1,0 +1,9 @@
+Pantolon,Pantolon Slim,249.90,12,M,Beyaz,resimler/pantolon1.jpg
+Pantolon,Pantolon Klasik,229.90,6,L,Siyah,resimler/pantolon2.jpg
+Gömlek,Gömlek Ekose,399.90,4,M,Beyaz,resimler/gomlek1.jpg
+Gömlek,Gömlek Düz,149.90,28,L,Bej,resimler/gomlek2.jpg
+Ceket,Ceket Deri,349.90,0,M,Bej,resimler/ceket1.jpg
+Ceket,Ceket Kumaş,319.90,0,L,Bej,resimler/ceket2.jpg
+
+
+Gomlek,Bluz,125.99,10,M,Beyaz,yok

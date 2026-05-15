@@ -1,0 +1,2 @@
+TANSWEAR,admin,Admin
+Umut,umut,Musteri,1001343.2899999999
