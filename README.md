@@ -271,49 +271,57 @@ Asagida bir musteri satin alma akisinda kaliplarin nasil ic ice calistiginin oze
 ```
 MagazaProjesi/
 |-- src/
-|   |-- Main.java                         Uygulama giris noktasi
-|   |-- GirisEkrani.java                  Giris / kayit ekrani
-|   |-- AdminPaneliGUI.java               Yonetici paneli
-|   |-- MusteriPaneliGUI.java             Musteri paneli
-|   |-- ModernButton.java                 Ozel buton bileseni
-|   |-- UIThemes.java                     Tema sabitleri (renk ve font)
+|   |-- Main.java                         Uygulama giris noktasi (default package)
 |   |
-|   |-- Magaza.java                       Singleton + Subject
-|   |-- Subject.java                      Observer arayuzu (Subject tarafi)
-|   |-- Observer.java                     Observer arayuzu (Gozlemci tarafi)
+|   |-- patterns/                         TASARIM KALIPLARI PAKETI
+|   |   |-- singleton/
+|   |   |   +-- Magaza.java               Singleton + Subject
+|   |   |-- factorymethod/
+|   |   |   +-- UrunFactory.java          Factory Method
+|   |   |-- abstractfactory/
+|   |   |   +-- KoleksiyonFabrikasi.java  Abstract Factory (arayuz)
+|   |   |   +-- YazlikKoleksiyonFabrikasi.java
+|   |   |   +-- KislikKoleksiyonFabrikasi.java
+|   |   |-- adapter/
+|   |   |   +-- OdemeSistemi.java         Adapter (Target)
+|   |   |   +-- DisBankaSistemi.java      Adapter (Adaptee)
+|   |   |   +-- BankaAdapter.java         Adapter (Adapter)
+|   |   |-- decorator/
+|   |   |   +-- Fiyatlanabilir.java       Decorator (Component)
+|   |   |   +-- SepetDecorator.java       Decorator (Abstract Decorator)
+|   |   |   +-- HediyePaketiDecorator.java
+|   |   |   +-- HizliKargoDecorator.java
+|   |   |-- observer/
+|   |   |   +-- Subject.java              Observer (Subject arayuzu)
+|   |   |   +-- Observer.java             Observer (Observer arayuzu)
+|   |   |-- strategy/
+|   |   |   +-- IndirimStratejisi.java    Strategy (arayuz)
+|   |   |   +-- IndirimYok.java
+|   |   |   +-- YuzdeOnIndirim.java
+|   |   |   +-- YuzdeYirmiIndirim.java
 |   |
-|   |-- Urun.java                         Soyut urun sinifi
-|   |-- Kiyafet.java                      Ara soyut sinif (beden/renk/resim)
-|   |-- Gomlek.java                       Somut urun
-|   |-- Pantolon.java                     Somut urun
-|   |-- Ceket.java                        Somut urun
-|   |-- SatinAlabilir.java                Satin alma arayuzu
+|   |-- model/                            TEMEL VERI MODELLERI
+|   |   |-- Urun.java
+|   |   |-- Kiyafet.java
+|   |   |-- Gomlek.java
+|   |   |-- Pantolon.java
+|   |   |-- Ceket.java
+|   |   |-- SatinAlabilir.java
+|   |   |-- Sepet.java
+|   |   |-- Kullanici.java
+|   |   |-- Admin.java
+|   |   +-- Musteri.java
 |   |
-|   |-- UrunFactory.java                  Factory Method
-|   |-- KoleksiyonFabrikasi.java          Abstract Factory (arayuz)
-|   |-- YazlikKoleksiyonFabrikasi.java    Abstract Factory (somut)
-|   |-- KislikKoleksiyonFabrikasi.java    Abstract Factory (somut)
+|   |-- gui/                              GRAFIKSEL KULLANICI ARAYUZLERI
+|   |   |-- GirisEkrani.java
+|   |   |-- AdminPaneliGUI.java
+|   |   |-- MusteriPaneliGUI.java
+|   |   |-- ModernButton.java
+|   |   +-- UIThemes.java
 |   |
-|   |-- Sepet.java                        Sepet sinifi
-|   |-- Fiyatlanabilir.java               Decorator (Component arayuzu)
-|   |-- SepetDecorator.java               Decorator (soyut suslayici)
-|   |-- HediyePaketiDecorator.java        Decorator (somut: +20 TL)
-|   |-- HizliKargoDecorator.java          Decorator (somut: +50 TL)
-|   |
-|   |-- IndirimStratejisi.java            Strategy (arayuz)
-|   |-- IndirimYok.java                   Strategy (somut: %0)
-|   |-- YuzdeOnIndirim.java               Strategy (somut: %10)
-|   |-- YuzdeYirmiIndirim.java            Strategy (somut: %20)
-|   |
-|   |-- OdemeSistemi.java                 Adapter (Target arayuzu)
-|   |-- DisBankaSistemi.java              Adapter (Adaptee)
-|   |-- BankaAdapter.java                 Adapter (somut adaptor)
-|   |
-|   |-- Kullanici.java                    Soyut kullanici sinifi
-|   |-- Admin.java                        Yonetici sinifi
-|   |-- Musteri.java                      Musteri sinifi
-|   |-- DosyaIslemleri.java               Dosya okuma/yazma islemleri
-|   |-- KullaniciIslemleri.java           Kullanici kayit/giris islemleri
+|   |-- util/                             YARDIMCI SINIFLAR
+|   |   |-- DosyaIslemleri.java
+|   |   +-- KullaniciIslemleri.java
 |   |
 |   +-- resimler/                         Urun gorselleri
 |       |-- pantolon1.jpg
@@ -324,13 +332,13 @@ MagazaProjesi/
 |       |-- ceket1.jpg
 |       +-- ceket2.jpg
 |
-|-- bin/                                  Derlenenmis .class dosyalari + resimler
+|-- bin/                                  Derlenen siniflar (.class)
 |-- urunler.txt                           Urun veritabani
 |-- kullanicilar.txt                      Kullanici veritabani
 |-- giris_kaydi.txt                       Giris gecmisi
-|-- UML.puml                             UML sinif diyagrami (PlantUML)
+|-- UML.puml                              UML sinif diyagrami (PlantUML)
 |-- TASARIM_KALIPLARI.md                  Detayli tasarim kaliplari dokumani
-+-- README.md                            Bu dosya
++-- README.md                             Bu dosya
 ```
 
 ---
@@ -342,12 +350,33 @@ MagazaProjesi/
 - **Java JDK 17** veya ustu kurulu olmalidir.
 - Komut satirinda `java` ve `javac` komutlari erisebilir olmalidir.
 
-### Komut Satirindan
+### Komut Satirindan Derleme ve Calistirma
 
+Proje paket yapisina (subdirectories) sahip oldugu icin recursive derlenmelidir:
+
+#### 1. Windows PowerShell Uzerinde:
+```powershell
+cd MagazaProjesi
+javac -d bin -encoding UTF-8 (Get-ChildItem -Recurse src/*.java)
+xcopy /Y /E /I src\resimler bin\resimler
+java -cp bin Main
+```
+
+#### 2. Windows Klasik Komut Satirinda (CMD):
+```cmd
+cd MagazaProjesi
+dir /s /b src\*.java > sources.txt
+javac -d bin -encoding UTF-8 @sources.txt
+del sources.txt
+xcopy /Y /E /I src\resimler bin\resimler
+java -cp bin Main
+```
+
+#### 3. Linux / macOS Terminalinde:
 ```bash
 cd MagazaProjesi
-javac -d bin -encoding UTF-8 src/*.java
-xcopy /Y /E /I src\resimler bin\resimler
+find src -name "*.java" | xargs javac -d bin -encoding UTF-8
+cp -r src/resimler bin/
 java -cp bin Main
 ```
 

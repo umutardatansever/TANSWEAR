@@ -1,3 +1,6 @@
+import gui.GirisEkrani;
+import patterns.singleton.Magaza;
+
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.plaf.FontUIResource;

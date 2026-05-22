@@ -3,15 +3,15 @@
 Bu dokümanda projede uygulanan **7 tasarım kalıbı** açıklanmıştır
 (hocanın istediği 6'nın üstüne 1 ekstra: Abstract Factory de eklenmiştir).
 
-| # | Kalıp                  | Tip          | Konum                                                        |
-|---|------------------------|--------------|--------------------------------------------------------------|
-| 1 | **Singleton**          | Yaratıcı     | `Magaza`                                                     |
-| 2 | **Factory Method**     | Yaratıcı     | `UrunFactory`                                                |
-| 3 | **Abstract Factory**   | Yaratıcı     | `KoleksiyonFabrikasi`, `YazlikKoleksiyonFabrikasi`, `KislikKoleksiyonFabrikasi` |
-| 4 | **Adapter**            | Yapısal      | `BankaAdapter` ↔ `DisBankaSistemi`                          |
-| 5 | **Decorator**          | Yapısal      | `SepetDecorator`, `HediyePaketiDecorator`, `HizliKargoDecorator` |
-| 6 | **Observer**           | Davranışsal  | `Subject` (Magaza), `Observer` (AdminPaneliGUI, MusteriPaneliGUI) |
-| 7 | **Strategy**           | Davranışsal  | `IndirimStratejisi`, `IndirimYok`, `YuzdeOnIndirim`, `YuzdeYirmiIndirim` |
+| # | Kalıp                  | Tip          | Konum (Paket / Sınıflar)                                                        |
+|---|------------------------|--------------|---------------------------------------------------------------------------------|
+| 1 | **Singleton**          | Yaratıcı     | `patterns.singleton.Magaza`                                                     |
+| 2 | **Factory Method**     | Yaratıcı     | `patterns.factorymethod.UrunFactory`                                            |
+| 3 | **Abstract Factory**   | Yaratıcı     | `patterns.abstractfactory` (`KoleksiyonFabrikasi`, `Yazlik...`, `Kislik...`)     |
+| 4 | **Adapter**            | Yapısal      | `patterns.adapter` (`BankaAdapter` ↔ `DisBankaSistemi` / `OdemeSistemi`)        |
+| 5 | **Decorator**          | Yapısal      | `patterns.decorator` (`SepetDecorator`, `HediyePaketi...`, `HizliKargo...`)     |
+| 6 | **Observer**           | Davranışsal  | `patterns.observer` (`Subject` ↔ `Observer`), `gui` (`AdminPaneliGUI`, etc.)    |
+| 7 | **Strategy**           | Davranışsal  | `patterns.strategy` (`IndirimStratejisi`, `IndirimYok`, `YuzdeOn...`, etc.)     |
 
 ---
 
@@ -161,49 +161,61 @@ Yeni bir indirim çeşidi eklemek için `Sepet` sınıfı değiştirilmez; sadec
 ```
 MagazaProjesi/
 ├── src/
-│   ├── Main.java                  ← Uygulama girişi (Singleton'ı başlatır, GUI açar)
-│   ├── GirisEkrani.java           ← Login/Kayıt ekranı
-│   ├── AdminPaneliGUI.java        ← Yönetici paneli
-│   ├── MusteriPaneliGUI.java      ← Müşteri paneli
-│   ├── ModernButton.java          ← Özel buton bileşeni
-│   ├── UIThemes.java              ← Tema sabitleri (renk/font)
+│   ├── Main.java                  ← Uygulama girişi (default package)
 │   │
-│   ├── Magaza.java                ← Singleton + Subject
-│   ├── Subject.java / Observer.java
+│   ├── patterns/                  ← Tasarım kalıplarının paketleri
+│   │   ├── singleton/
+│   │   │   └── Magaza.java        ← Singleton + Subject
+│   │   ├── factorymethod/
+│   │   │   └── UrunFactory.java   ← Factory Method
+│   │   ├── abstractfactory/
+│   │   │   ├── KoleksiyonFabrikasi.java
+│   │   │   ├── YazlikKoleksiyonFabrikasi.java
+│   │   │   └── KislikKoleksiyonFabrikasi.java
+│   │   ├── adapter/
+│   │   │   ├── OdemeSistemi.java
+│   │   │   ├── DisBankaSistemi.java
+│   │   │   └── BankaAdapter.java
+│   │   ├── decorator/
+│   │   │   ├── Fiyatlanabilir.java
+│   │   │   ├── SepetDecorator.java
+│   │   │   ├── HediyePaketiDecorator.java
+│   │   │   └── HizliKargoDecorator.java
+│   │   ├── observer/
+│   │   │   ├── Subject.java
+│   │   │   └── Observer.java
+│   │   └── strategy/
+│   │       ├── IndirimStratejisi.java
+│   │       ├── IndirimYok.java
+│   │       ├── YuzdeOnIndirim.java
+│   │       └── YuzdeYirmiIndirim.java
 │   │
-│   ├── Urun.java                  ← Soyut ürün sınıfı
-│   ├── Kiyafet.java               ← Ara soyut sınıf (beden/renk/resim)
-│   ├── Gomlek.java / Pantolon.java / Ceket.java
-│   ├── SatinAlabilir.java
+│   ├── model/                     ← Veri modelleri ve sepet
+│   │   ├── Urun.java
+│   │   ├── Kiyafet.java
+│   │   ├── Gomlek.java
+│   │   ├── Pantolon.java
+│   │   ├── Ceket.java
+│   │   ├── SatinAlabilir.java
+│   │   ├── Sepet.java
+│   │   ├── Kullanici.java
+│   │   ├── Admin.java
+│   │   └── Musteri.java
 │   │
-│   ├── UrunFactory.java                       ← Factory Method
-│   ├── KoleksiyonFabrikasi.java               ← Abstract Factory (interface)
-│   ├── YazlikKoleksiyonFabrikasi.java         ← Abstract Factory (concrete)
-│   ├── KislikKoleksiyonFabrikasi.java         ← Abstract Factory (concrete)
+│   ├── gui/                       ← Grafiksel kullanıcı arayüzleri
+│   │   ├── GirisEkrani.java
+│   │   ├── AdminPaneliGUI.java
+│   │   ├── MusteriPaneliGUI.java
+│   │   ├── ModernButton.java
+│   │   └── UIThemes.java
 │   │
-│   ├── Sepet.java
-│   ├── Fiyatlanabilir.java                    ← Decorator (Component)
-│   ├── SepetDecorator.java                    ← Decorator (abstract)
-│   ├── HediyePaketiDecorator.java             ← Decorator (concrete)
-│   ├── HizliKargoDecorator.java               ← Decorator (concrete)
+│   ├── util/                      ← Dosya ve kullanıcı yardımcı sınıfları
+│   │   ├── DosyaIslemleri.java
+│   │   └── KullaniciIslemleri.java
 │   │
-│   ├── IndirimStratejisi.java                 ← Strategy (interface)
-│   ├── IndirimYok.java                        ← Strategy (concrete)
-│   ├── YuzdeOnIndirim.java                    ← Strategy (concrete)
-│   ├── YuzdeYirmiIndirim.java                 ← Strategy (concrete)
-│   │
-│   ├── OdemeSistemi.java                      ← Adapter (Target)
-│   ├── DisBankaSistemi.java                   ← Adapter (Adaptee)
-│   ├── BankaAdapter.java                      ← Adapter (Adapter)
-│   │
-│   ├── Kullanici.java
-│   ├── Admin.java
-│   ├── Musteri.java
-│   ├── DosyaIslemleri.java
-│   ├── KullaniciIslemleri.java
-│   └── resimler/                              ← Ürün görselleri
+│   └── resimler/                  ← Ürün görselleri
 │
-├── UML.puml                       ← UML sınıf diyagramı (PlantUML)
+├── UML.puml                       ← Güncellenmiş UML sınıf diyagramı
 ├── TASARIM_KALIPLARI.md           ← Bu doküman
 ├── README.md                      ← Çalıştırma talimatları
 ├── urunler.txt                    ← Ürün veritabanı

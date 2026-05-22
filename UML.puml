@@ -1,207 +1,229 @@
 @startuml TANSWEAR_Magaza_UML
 ' ----------------------------------------------------------
 '  TANSWEAR Mağaza Otomasyonu — UML Sınıf Diyagramı
-'  PlantUML kaynak dosyası
-'  Görselleştirme:
-'    1) https://www.plantuml.com/plantuml/uml/  (online)
-'    2) VS Code "PlantUML" eklentisi
-'    3) plantuml -tpng UML.puml
+'  PlantUML kaynak dosyası (Paket Yapısı ile Düzenlenmiş)
 ' ----------------------------------------------------------
 skinparam classAttributeIconSize 0
 skinparam shadowing false
 skinparam linetype ortho
 hide empty members
 
-' ===== KULLANICI HİYERARŞİSİ =====
-abstract class Kullanici {
-  # kullaniciAdi : String
-  # sifre : String
-  + getKullaniciAdi() : String
-  + getSifre() : String
-  + kullaniciSatiri() : String
-  + {abstract} menu() : void
+' ===== MODEL PAKETİ =====
+package model {
+  abstract class Kullanici {
+    # kullaniciAdi : String
+    # sifre : String
+    + getKullaniciAdi() : String
+    + getSifre() : String
+    + kullaniciSatiri() : String
+    + {abstract} menu() : void
+  }
+
+  class Admin {
+    - magaza : Magaza
+    + Admin(ad, sifre, magaza)
+    + getMagaza() : Magaza
+  }
+
+  class Musteri {
+    - magaza : Magaza
+    - bakiye : double
+    + getBakiye() : double
+    + paraCek(miktar) : boolean
+  }
+
+  interface SatinAlabilir {
+    + satinAl() : boolean
+  }
+
+  abstract class Urun {
+    - ad : String
+    - fiyat : double
+    - stok : int
+    + getAd() : String
+    + getFiyat() : double
+    + getStok() : int
+    + setStok(int)
+    + stokAzalt(int)
+    + getTur() : String
+    + satinAl() : boolean
+    + {abstract} bilgiGoster() : void
+  }
+
+  abstract class Kiyafet {
+    # beden : String
+    # renk : String
+    # resimYolu : String
+  }
+
+  class Gomlek
+  class Pantolon
+  class Ceket
+
+  class Sepet {
+    - urunler : ArrayList<Urun>
+    - indirimStratejisi : IndirimStratejisi
+    + urunEkle(Urun)
+    + urunCikar(String)
+    + toplamTutar() : double
+    + satinAl() : boolean
+  }
+
+  Kullanici <|-- Admin
+  Kullanici <|-- Musteri
+
+  Urun ..|> SatinAlabilir
+  Urun <|-- Kiyafet
+  Kiyafet <|-- Gomlek
+  Kiyafet <|-- Pantolon
+  Kiyafet <|-- Ceket
+
+  Sepet ..|> SatinAlabilir
+  Sepet o-- "*" Urun
 }
 
-class Admin {
-  - magaza : Magaza
-  + Admin(ad, sifre, magaza)
-  + getMagaza() : Magaza
+' ===== PATTERNS.SINGLETON =====
+package patterns.singleton {
+  class Magaza << (S,#FFAA00) Singleton >> {
+    - {static} instance : Magaza
+    - urunListesi : ArrayList<Urun>
+    - gozlemciler : ArrayList<Observer>
+    - Magaza()
+    + {static} getInstance() : Magaza
+    + urunEkle(Urun)
+    + urunSil(String)
+    + stokGuncelle(String, int)
+    + dosyadanUrunEkle()
+  }
 }
 
-class Musteri {
-  - magaza : Magaza
-  - bakiye : double
-  + getBakiye() : double
-  + paraCek(miktar) : boolean
+' ===== PATTERNS.FACTORYMETHOD =====
+package patterns.factorymethod {
+  class UrunFactory << (F,#88CCFF) Factory >> {
+    + {static} createUrun(tur, ad, ...) : Urun
+  }
 }
 
-Kullanici <|-- Admin
-Kullanici <|-- Musteri
+' ===== PATTERNS.ABSTRACTFACTORY =====
+package patterns.abstractfactory {
+  interface KoleksiyonFabrikasi << Abstract Factory >> {
+    + ustGiyimUret(...) : Urun
+    + altGiyimUret(...) : Urun
+    + koleksiyonAdi() : String
+  }
 
-' ===== ÜRÜN HİYERARŞİSİ =====
-interface SatinAlabilir {
-  + satinAl() : boolean
+  class YazlikKoleksiyonFabrikasi
+  class KislikKoleksiyonFabrikasi
+
+  KoleksiyonFabrikasi <|.. YazlikKoleksiyonFabrikasi
+  KoleksiyonFabrikasi <|.. KislikKoleksiyonFabrikasi
 }
 
-abstract class Urun {
-  - ad : String
-  - fiyat : double
-  - stok : int
-  + getAd() : String
-  + getFiyat() : double
-  + getStok() : int
-  + setStok(int)
-  + stokAzalt(int)
-  + getTur() : String
-  + satinAl() : boolean
-  + {abstract} bilgiGoster() : void
+' ===== PATTERNS.ADAPTER =====
+package patterns.adapter {
+  interface OdemeSistemi << Target >> {
+    + odemeYap(miktarTL, kartSahibi) : boolean
+  }
+
+  class DisBankaSistemi << Adaptee >> {
+    + disBankaOdemeAl(musteriIsmi, miktarDolar) : boolean
+  }
+
+  class BankaAdapter << Adapter >> {
+    - disBanka : DisBankaSistemi
+    + odemeYap(miktarTL, kartSahibi) : boolean
+  }
+
+  OdemeSistemi <|.. BankaAdapter
 }
 
-abstract class Kiyafet {
-  # beden : String
-  # renk : String
-  # resimYolu : String
+' ===== PATTERNS.DECORATOR =====
+package patterns.decorator {
+  interface Fiyatlanabilir << Component >> {
+    + getTutar() : double
+    + aciklamaGetir() : String
+  }
+
+  abstract class SepetDecorator << Decorator >>
+  class HediyePaketiDecorator
+  class HizliKargoDecorator
+
+  Fiyatlanabilir <|.. SepetDecorator
+  SepetDecorator <|-- HediyePaketiDecorator
+  SepetDecorator <|-- HizliKargoDecorator
 }
 
-class Gomlek
-class Pantolon
-class Ceket
+' ===== PATTERNS.OBSERVER =====
+package patterns.observer {
+  interface Subject {
+    + gozlemciEkle(Observer)
+    + gozlemciCikar(Observer)
+    + gozlemcilereHaberVer()
+  }
 
-Urun ..|> SatinAlabilir
-Urun <|-- Kiyafet
-Kiyafet <|-- Gomlek
-Kiyafet <|-- Pantolon
-Kiyafet <|-- Ceket
-
-' ===== SINGLETON + OBSERVER (SUBJECT) =====
-interface Subject {
-  + gozlemciEkle(Observer)
-  + gozlemciCikar(Observer)
-  + gozlemcilereHaberVer()
+  interface Observer {
+    + guncelle()
+  }
 }
 
-interface Observer {
-  + guncelle()
+' ===== PATTERNS.STRATEGY =====
+package patterns.strategy {
+  interface IndirimStratejisi << Strategy >> {
+    + indirimHesapla(double) : double
+  }
+  class IndirimYok
+  class YuzdeOnIndirim
+  class YuzdeYirmiIndirim
+
+  IndirimStratejisi <|.. IndirimYok
+  IndirimStratejisi <|.. YuzdeOnIndirim
+  IndirimStratejisi <|.. YuzdeYirmiIndirim
 }
 
-class Magaza << (S,#FFAA00) Singleton >> {
-  - {static} instance : Magaza
-  - urunListesi : ArrayList<Urun>
-  - gozlemciler : ArrayList<Observer>
-  - Magaza()
-  + {static} getInstance() : Magaza
-  + urunEkle(Urun)
-  + urunSil(String)
-  + stokGuncelle(String, int)
-  + dosyadanUrunEkle()
+' ===== GUI PAKETİ =====
+package gui {
+  class GirisEkrani
+  class AdminPaneliGUI
+  class MusteriPaneliGUI
+  class ModernButton
+  class UIThemes
 }
 
-Magaza ..|> Subject
+' ===== UTIL PAKETİ =====
+package util {
+  class DosyaIslemleri << Utility >>
+  class KullaniciIslemleri << Utility >>
+}
+
+' ===== DIŞ İLİŞKİLER VE BAĞLANTILAR =====
+Magaza ..|> patterns.observer.Subject
 Magaza "1" o-- "*" Urun
-Magaza "1" o-- "*" Observer
+Magaza "1" o-- "*" patterns.observer.Observer
 
-' ===== FACTORY METHOD =====
-class UrunFactory << (F,#88CCFF) Factory >> {
-  + {static} createUrun(tur, ad, ...) : Urun
-}
 UrunFactory ..> Urun : creates
 UrunFactory ..> Gomlek : creates
 UrunFactory ..> Pantolon : creates
 UrunFactory ..> Ceket : creates
-
-' ===== ABSTRACT FACTORY =====
-interface KoleksiyonFabrikasi << Abstract Factory >> {
-  + ustGiyimUret(...) : Urun
-  + altGiyimUret(...) : Urun
-  + koleksiyonAdi() : String
-}
-
-class YazlikKoleksiyonFabrikasi
-class KislikKoleksiyonFabrikasi
-
-KoleksiyonFabrikasi <|.. YazlikKoleksiyonFabrikasi
-KoleksiyonFabrikasi <|.. KislikKoleksiyonFabrikasi
 
 YazlikKoleksiyonFabrikasi ..> Gomlek : ust
 YazlikKoleksiyonFabrikasi ..> Pantolon : alt
 KislikKoleksiyonFabrikasi ..> Ceket : ust
 KislikKoleksiyonFabrikasi ..> Pantolon : alt
 
-' ===== STRATEGY =====
-interface IndirimStratejisi << Strategy >> {
-  + indirimHesapla(double) : double
-}
-class IndirimYok
-class YuzdeOnIndirim
-class YuzdeYirmiIndirim
-
-IndirimStratejisi <|.. IndirimYok
-IndirimStratejisi <|.. YuzdeOnIndirim
-IndirimStratejisi <|.. YuzdeYirmiIndirim
-
-' ===== DECORATOR =====
-interface Fiyatlanabilir << Component >> {
-  + getTutar() : double
-  + aciklamaGetir() : String
-}
-
-abstract class SepetDecorator
-class HediyePaketiDecorator
-class HizliKargoDecorator
-
-class Sepet {
-  - urunler : ArrayList<Urun>
-  - indirimStratejisi : IndirimStratejisi
-  + urunEkle(Urun)
-  + urunCikar(String)
-  + toplamTutar() : double
-  + satinAl() : boolean
-}
-
 Fiyatlanabilir <|.. Sepet
-Fiyatlanabilir <|.. SepetDecorator
-SepetDecorator <|-- HediyePaketiDecorator
-SepetDecorator <|-- HizliKargoDecorator
 SepetDecorator o-- Fiyatlanabilir : sarmalar
-Sepet ..|> SatinAlabilir
-Sepet o-- "*" Urun
 Sepet --> IndirimStratejisi : kullanır
 
-' ===== ADAPTER =====
-interface OdemeSistemi << Target >> {
-  + odemeYap(miktarTL, kartSahibi) : boolean
-}
-
-class DisBankaSistemi << Adaptee >> {
-  + disBankaOdemeAl(musteriIsmi, miktarDolar) : boolean
-}
-
-class BankaAdapter << Adapter >> {
-  - disBanka : DisBankaSistemi
-  + odemeYap(miktarTL, kartSahibi) : boolean
-}
-
-OdemeSistemi <|.. BankaAdapter
 BankaAdapter --> DisBankaSistemi : delegates
 
-' ===== GUI =====
-class GirisEkrani
-class AdminPaneliGUI
-class MusteriPaneliGUI
-class ModernButton
-class UIThemes
+AdminPaneliGUI ..|> patterns.observer.Observer
+MusteriPaneliGUI ..|> patterns.observer.Observer
 
-AdminPaneliGUI ..|> Observer
-MusteriPaneliGUI ..|> Observer
 GirisEkrani --> Magaza
 AdminPaneliGUI --> Magaza
 MusteriPaneliGUI --> Magaza
 MusteriPaneliGUI --> Sepet
 MusteriPaneliGUI --> BankaAdapter
-
-' ===== DOSYA İŞLEMLERİ =====
-class DosyaIslemleri << Utility >>
-class KullaniciIslemleri << Utility >>
 
 Magaza --> DosyaIslemleri
 GirisEkrani --> DosyaIslemleri
